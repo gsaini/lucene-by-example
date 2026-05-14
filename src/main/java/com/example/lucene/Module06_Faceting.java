@@ -8,15 +8,16 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.facet.FacetResult;
 import org.apache.lucene.facet.FacetsCollector;
+import org.apache.lucene.facet.FacetsCollectorManager;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
-import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -31,14 +32,17 @@ import org.apache.lucene.store.Directory;
  * <p>
  * Faceting is the "5 results in Programming, 3 in Search, 2 in Architecture" sidebar you see
  * on every e-commerce site. Lucene supports it via a separate <em>taxonomy index</em> that
- * stores the category hierarchy, and a {@link FacetsCollector} that piggy-backs on a normal
- * search to count category memberships.
+ * stores the category hierarchy, and a {@link FacetsCollectorManager} that piggy-backs on a
+ * normal search to count category memberships.
  * <p>
  * The flow:
  * <ol>
  *   <li>While indexing, add a {@link FacetField} for each facet value and let {@link FacetsConfig}
  *       rewrite the document so the {@link TaxonomyWriter} can record the category.</li>
- *   <li>While searching, run your normal {@link Query} through {@link FacetsCollector#search}.</li>
+ *   <li>While searching, drive the normal {@link Query} through
+ *       {@link FacetsCollectorManager#search(IndexSearcher, Query, int, FacetsCollectorManager)}.
+ *       This is the Lucene 10 replacement for the old static
+ *       {@code FacetsCollector.search(...)} helper (now removed).</li>
  *   <li>Ask {@link FastTaxonomyFacetCounts} for the top categories.</li>
  * </ol>
  */
@@ -63,12 +67,14 @@ public class Module06_Faceting {
                  TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxoDir)) {
 
                 IndexSearcher searcher = new IndexSearcher(reader);
-                FacetsCollector fc = new FacetsCollector();
+                FacetsCollectorManager fcm = new FacetsCollectorManager();
 
-                // Run a normal search but route hits to the FacetsCollector. Use any Query here —
-                // a MatchAllDocsQuery is the simplest, equivalent to "no filter applied".
+                // Run a normal search but route hits to a FacetsCollector built by the manager.
+                // Use any Query here — a MatchAllDocsQuery is the simplest ("no filter applied").
                 Query q = new MatchAllDocsQuery();
-                FacetsCollector.search(searcher, q, /* topN hits */ 10, fc);
+                FacetsCollectorManager.FacetsResult result =
+                    FacetsCollectorManager.search(searcher, q, /* topN hits */ 10, fcm);
+                FacetsCollector fc = result.facetsCollector();
 
                 FastTaxonomyFacetCounts facets =
                     new FastTaxonomyFacetCounts(taxoReader, facetsConfig, fc);
@@ -78,6 +84,10 @@ public class Module06_Faceting {
 
                 Console.section("Top decades");
                 printFacet(facets.getTopChildren(10, "Decade"));
+
+                System.out.println();
+                System.out.println("(matched " + result.topDocs().totalHits
+                    + " documents while collecting these facet counts.)");
             }
         }
     }

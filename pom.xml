@@ -6,18 +6,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>apache-lucene-getting-started</artifactId>
+    <artifactId>lucene-by-example</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>Apache Lucene - Getting Started</name>
+    <name>Lucene by Example</name>
     <description>A progressive, hands-on learning project for the Apache Lucene framework.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <lucene.version>9.12.0</lucene.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <lucene.version>10.4.0</lucene.version>
     </properties>
 
     <dependencies>

@@ -1,15 +1,15 @@
-# Apache Lucene — Getting Started
+# Lucene by Example
 
-![Java](https://img.shields.io/badge/Java-17-007396?style=for-the-badge&logo=openjdk&logoColor=white)
-![Apache Lucene](https://img.shields.io/badge/Apache%20Lucene-9.12.0-D22128?style=for-the-badge&logo=apache&logoColor=white)
+![Java](https://img.shields.io/badge/Java-25-007396?style=for-the-badge&logo=openjdk&logoColor=white)
+![Apache Lucene](https://img.shields.io/badge/Apache%20Lucene-10.4.0-D22128?style=for-the-badge&logo=apache&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-3.8+-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache%202.0-0F80C1?style=for-the-badge&logo=apache&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Cross--Platform-4EAA25?style=for-the-badge&logo=linux&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Learning%20Project-0A66C2?style=for-the-badge&logo=readthedocs&logoColor=white)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/gsaini/apache-lucene-getting-started?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/gsaini/apache-lucene-getting-started?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/gsaini/apache-lucene-getting-started?style=social)
+[![GitHub last commit](https://img.shields.io/github/last-commit/gsaini/lucene-by-example?style=flat-square)](https://github.com/gsaini/lucene-by-example/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/gsaini/lucene-by-example?style=flat-square)](https://github.com/gsaini/lucene-by-example)
+[![GitHub stars](https://img.shields.io/github/stars/gsaini/lucene-by-example?style=social)](https://github.com/gsaini/lucene-by-example/stargazers)
 
 A hands-on learning project that walks through the core features of
 [Apache Lucene](https://lucene.apache.org/) one self-contained module at a time.
@@ -39,9 +39,9 @@ changes — no external services, no setup.
 
 ## Requirements
 
-- Java 17+
+- Java 25+ (current LTS)
 - Maven 3.8+
-- Lucene 9.12.0 (declared in [pom.xml](pom.xml), pulled by Maven)
+- Lucene 10.4.0 (declared in [pom.xml](pom.xml), pulled by Maven)
 
 ## Running
 
@@ -281,9 +281,11 @@ How the 10 modules fit on the architecture diagram:
 
 ## Where to go next
 
-- The official [Lucene demo](https://lucene.apache.org/core/9_12_0/demo/index.html)
+- The official [Lucene 10.4.0 demo](https://lucene.apache.org/core/10_4_0/demo/index.html)
   shows indexing of real files from disk.
 - [Lucene's MIGRATE.md](https://github.com/apache/lucene/blob/main/lucene/MIGRATE.md)
-  is the best place to see what changes between major versions.
+  is the best place to see what changes between major versions (e.g. 9.x → 10.x removed the
+  static `FacetsCollector.search(...)` helper in favour of `FacetsCollectorManager`, used in
+  Module 6 of this project).
 - Real-world systems built on Lucene worth studying: Elasticsearch, OpenSearch,
   Solr — they reuse the APIs you've practised in this project.
