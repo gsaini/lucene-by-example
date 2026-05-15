@@ -89,7 +89,7 @@ public class Module08_UpdatesAndDeletes {
         Console.section(label);
         try (DirectoryReader reader = DirectoryReader.open(dir)) {
             IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs hits = searcher.search(new MatchAllDocsQuery(), 20);
+            TopDocs hits = searcher.search(MatchAllDocsQuery.INSTANCE, 20);
             System.out.println("  live documents in index: " + reader.numDocs());
             for (ScoreDoc sd : hits.scoreDocs) {
                 Document doc = searcher.storedFields().document(sd.doc);

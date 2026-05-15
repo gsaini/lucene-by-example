@@ -3,6 +3,7 @@
 ![Java](https://img.shields.io/badge/Java-25-007396?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Apache Lucene](https://img.shields.io/badge/Apache%20Lucene-10.4.0-D22128?style=for-the-badge&logo=apache&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-3.8+-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![JUnit 5](https://img.shields.io/badge/JUnit-5.12-25A162?style=for-the-badge&logo=junit5&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache%202.0-0F80C1?style=for-the-badge&logo=apache&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Cross--Platform-4EAA25?style=for-the-badge&logo=linux&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Learning%20Project-0A66C2?style=for-the-badge&logo=readthedocs&logoColor=white)
@@ -24,6 +25,7 @@ changes — no external services, no setup.
 
 - [Requirements](#requirements)
 - [Running](#running)
+- [Running the tests](#running-the-tests)
 - [What each module covers](#what-each-module-covers)
 - [Architecture](#architecture)
   - [End-to-end pipeline](#end-to-end-pipeline)
@@ -63,19 +65,38 @@ Run a few modules in sequence:
 mvn -q compile exec:java -Dexec.args="1 3 7"
 ```
 
+## Running the tests
+
+Each module has a matching integration-test class under [src/test/java/com/example/lucene/](src/test/java/com/example/lucene/)
+that builds a real in-memory index, runs real queries, and asserts on real results — no mocks.
+
+```bash
+# Run every test
+mvn -q test
+
+# Run a single test class
+mvn -q test -Dtest=Module03_QueryTypesIT
+
+# Run a single method
+mvn -q test -Dtest=Module03_QueryTypesIT#fuzzy_query
+```
+
+The tests double as executable documentation: each `@DisplayName` describes the Lucene behaviour
+the assertion locks in, so reading the test list is another way to learn what each module covers.
+
 ## What each module covers
 
-| #  | Module | What you'll learn |
-|----|--------|-------------------|
-| 1  | [Module01_HelloLucene.java](src/main/java/com/example/lucene/Module01_HelloLucene.java) | Directory, Analyzer, IndexWriter, IndexSearcher, TermQuery — the minimum viable pipeline. |
-| 2  | [Module02_FieldsAndAnalyzers.java](src/main/java/com/example/lucene/Module02_FieldsAndAnalyzers.java) | StringField vs TextField vs StoredField vs Point vs DocValues; how analyzers produce different tokens. |
-| 3  | [Module03_QueryTypes.java](src/main/java/com/example/lucene/Module03_QueryTypes.java) | TermQuery, PhraseQuery, BooleanQuery (MUST / SHOULD / MUST_NOT / FILTER), WildcardQuery, PrefixQuery, FuzzyQuery, RegexpQuery, numeric range queries. |
-| 4  | [Module04_QueryParser.java](src/main/java/com/example/lucene/Module04_QueryParser.java) | Lucene's classic query-string syntax, including MultiFieldQueryParser with per-field boosts. |
-| 5  | [Module05_Highlighting.java](src/main/java/com/example/lucene/Module05_Highlighting.java) | Generating snippet fragments with matched terms wrapped in HTML tags. |
-| 6  | [Module06_Faceting.java](src/main/java/com/example/lucene/Module06_Faceting.java) | Sidebar-style facet counts using FacetField + Taxonomy index. |
-| 7  | [Module07_SortingAndScoring.java](src/main/java/com/example/lucene/Module07_SortingAndScoring.java) | Sort by doc-values fields; FunctionScoreQuery to blend BM25 with a numeric signal. |
-| 8  | [Module08_UpdatesAndDeletes.java](src/main/java/com/example/lucene/Module08_UpdatesAndDeletes.java) | updateDocument by primary key, deleteDocuments by Term and Query, deleteAll. |
-| 9  | [Module09_CustomAnalyzer.java](src/main/java/com/example/lucene/Module09_CustomAnalyzer.java) | Building an Analyzer pipeline with stop-words, synonyms, stemming, edge n-grams, ASCII folding. |
+| # | Module | What you'll learn |
+| - | - | - |
+| 1 | [Module01_HelloLucene.java](src/main/java/com/example/lucene/Module01_HelloLucene.java) | Directory, Analyzer, IndexWriter, IndexSearcher, TermQuery — the minimum viable pipeline. |
+| 2 | [Module02_FieldsAndAnalyzers.java](src/main/java/com/example/lucene/Module02_FieldsAndAnalyzers.java) | StringField vs TextField vs StoredField vs Point vs DocValues; how analyzers produce different tokens. |
+| 3 | [Module03_QueryTypes.java](src/main/java/com/example/lucene/Module03_QueryTypes.java) | TermQuery, PhraseQuery, BooleanQuery (MUST / SHOULD / MUST_NOT / FILTER), WildcardQuery, PrefixQuery, FuzzyQuery, RegexpQuery, numeric range queries. |
+| 4 | [Module04_QueryParser.java](src/main/java/com/example/lucene/Module04_QueryParser.java) | Lucene's classic query-string syntax, including MultiFieldQueryParser with per-field boosts. |
+| 5 | [Module05_Highlighting.java](src/main/java/com/example/lucene/Module05_Highlighting.java) | Generating snippet fragments with matched terms wrapped in HTML tags. |
+| 6 | [Module06_Faceting.java](src/main/java/com/example/lucene/Module06_Faceting.java) | Sidebar-style facet counts using FacetField + Taxonomy index. |
+| 7 | [Module07_SortingAndScoring.java](src/main/java/com/example/lucene/Module07_SortingAndScoring.java) | Sort by doc-values fields; FunctionScoreQuery to blend BM25 with a numeric signal. |
+| 8 | [Module08_UpdatesAndDeletes.java](src/main/java/com/example/lucene/Module08_UpdatesAndDeletes.java) | updateDocument by primary key, deleteDocuments by Term and Query, deleteAll. |
+| 9 | [Module09_CustomAnalyzer.java](src/main/java/com/example/lucene/Module09_CustomAnalyzer.java) | Building an Analyzer pipeline with stop-words, synonyms, stemming, edge n-grams, ASCII folding. |
 | 10 | [Module10_Suggester.java](src/main/java/com/example/lucene/Module10_Suggester.java) | AnalyzingInfixSuggester for fast autocomplete. |
 
 ---
@@ -87,7 +108,7 @@ mvn -q compile exec:java -Dexec.args="1 3 7"
 The big picture: a domain object enters on the left, an index is built in the middle, and
 queries flow back through the right.
 
-```
+```text
    ┌──────────────────────────────────────────────────────────────────────────┐
    │                          WRITE PATH (indexing)                           │
    └──────────────────────────────────────────────────────────────────────────┘
@@ -146,7 +167,7 @@ Inside `IndexWriter.addDocument(...)`, each `Field` flows through the analyzer c
 resulting tokens are recorded in postings, doc-values, points and stored fields — depending on
 which `FieldType` flags were set.
 
-```
+```text
    Document
    ├── StringField "id"       ─────▶ exact-term postings        (no analysis)
    ├── TextField "title"      ─────▶ Analyzer ─▶ tokens ─▶ postings
@@ -169,7 +190,7 @@ which `FieldType` flags were set.
 
 ### Searching pipeline (read path)
 
-```
+```text
    user input ──▶ QueryParser ──▶ Query tree ──▶ rewrite ──▶ Weight ──▶ Scorer
                                                                           │
                                                   per-segment iteration ──┘
@@ -194,7 +215,7 @@ This is the idea every Lucene feature is built on: instead of storing "doc → w
 flips it to "word → docs". Looking up a term is then an O(1) hash/Trie lookup followed by a
 walk over its postings list.
 
-```
+```text
                            Forward (what we wrote)
                            ───────────────────────
    docId=1   "Lucene in Action"
@@ -241,7 +262,7 @@ A quick reference for which field type to pick for which purpose:
 
 How the 10 modules fit on the architecture diagram:
 
-```
+```text
                 ┌─────────────────────────────────────────────────────────────┐
                 │                       INDEX BUILDING                        │
                 │                                                             │
