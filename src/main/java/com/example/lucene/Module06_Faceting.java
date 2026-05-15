@@ -71,7 +71,7 @@ public class Module06_Faceting {
 
                 // Run a normal search but route hits to a FacetsCollector built by the manager.
                 // Use any Query here — a MatchAllDocsQuery is the simplest ("no filter applied").
-                Query q = new MatchAllDocsQuery();
+                Query q = MatchAllDocsQuery.INSTANCE;
                 FacetsCollectorManager.FacetsResult result =
                     FacetsCollectorManager.search(searcher, q, /* topN hits */ 10, fcm);
                 FacetsCollector fc = result.facetsCollector();

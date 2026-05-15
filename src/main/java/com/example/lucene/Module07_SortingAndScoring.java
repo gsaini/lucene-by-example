@@ -57,22 +57,22 @@ public class Module07_SortingAndScoring {
                 IndexSearcher searcher = new IndexSearcher(reader);
 
                 Console.section("Default scoring (BM25)");
-                showHits(searcher, new MatchAllDocsQuery(), null);
+                showHits(searcher, MatchAllDocsQuery.INSTANCE, null);
 
                 Console.section("Sort by year DESC");
                 Sort byYear = new Sort(
                     new SortField("year", SortField.Type.INT, /* reverse */ true));
-                showHits(searcher, new MatchAllDocsQuery(), byYear);
+                showHits(searcher, MatchAllDocsQuery.INSTANCE, byYear);
 
                 Console.section("Sort by rating DESC then year DESC");
                 Sort byRatingThenYear = new Sort(
                     new SortField("rating", SortField.Type.DOUBLE, true),
                     new SortField("year", SortField.Type.INT, true));
-                showHits(searcher, new MatchAllDocsQuery(), byRatingThenYear);
+                showHits(searcher, MatchAllDocsQuery.INSTANCE, byRatingThenYear);
 
                 Console.section("Sort by category (alphabetical) for a faceted-feeling display");
                 Sort byCategory = new Sort(new SortField("category_sort", SortField.Type.STRING));
-                showHits(searcher, new MatchAllDocsQuery(), byCategory);
+                showHits(searcher, MatchAllDocsQuery.INSTANCE, byCategory);
 
                 // Hybrid: keep BM25 relevance, but multiply by the doc's rating. Highly rated
                 // and topically relevant books rise to the top together.
